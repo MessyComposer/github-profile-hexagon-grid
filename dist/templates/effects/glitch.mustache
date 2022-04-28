@@ -1,0 +1,25 @@
+<filter id='glitch{{ nth }}' x='0%' y='0%' width='100%' height='100%'>    
+    <feColorMatrix in="SourceGraphic" mode="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
+    <feOffset in="r" result="r" dx="0" dy="0">
+        <animate attributeName="dx" attributeType="XML" values="-1; .5; 3; -2; .4; .5; 2; 1; -.5; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0;" dur=".5s" begin="op{{ nth }}.begin"/>
+        <animate attributeName="dy" attributeType="XML" values="2; -1; .4; 2; 1; 3; -.5; 2; 1; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0;" dur="1s" begin="op{{ nth }}.begin"/>
+    </feOffset>
+    <feColorMatrix in="SourceGraphic" mode="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+    <feOffset in="g" result="g" dx="0" dy="0">
+        <animate attributeName="dx" attributeType="XML" values="0; 0; 0; 0; 0; 0; 0; 0; 2; -1; .4; 2; 1; 3; -.5; 2; 1; 0; 0; 0; 0; 0; 0; 0; 0;" dur="1.5s" begin="op{{ nth }}.begin"/>
+        <animate attributeName="dy" attributeType="XML" values="0; 0; 0; 0; 0; 0; 0; 0; -1; .5; 3; -2; .4; .5; 2; 1; -.5; 0; 0; 0; 0; 0; 0; 0; 0;" dur="1s" begin="op{{ nth }}.begin"/>
+    </feOffset>
+    <feColorMatrix in="SourceGraphic" mode="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+    <feOffset in="b" result="b" dx="0" dy="0">
+        <animate attributeName="dx" attributeType="XML" values="0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 2; -1; .4; 2; 1; 3; -.5; 2; 1;" dur="0.35s" begin="op{{ nth }}.begin"/>
+        <animate attributeName="dy" attributeType="XML" values="0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; -1; .5; 3; -2; .4; .5; 2; 1; -.5;" dur="0.35s" begin="op{{ nth }}.begin"/>
+    </feOffset>
+    
+    <feBlend in="r" in2="g" mode="screen" result="blend" />
+    <feBlend in="blend" in2="b" mode="screen" result="blend" />
+
+    <feTurbulence type="fractalNoise" result="NOISE" numOctaves="4">
+        <animate id="op{{ nth }}" attributeName="baseFrequency" values="0 0;0 0.2;0 0" dur="0.5s" begin="{{ start_after }}s;op{{ nth }}.end + {{repeat_after}}s"/>
+    </feTurbulence>
+    <feDisplacementMap in="blend" in2="NOISE" scale="30" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
+</filter>

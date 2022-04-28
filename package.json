@@ -7,11 +7,28 @@
   "author": "MesssyComposer (https://www.github.com/MessyComposer)",
   "license": "GPL-3.0",
   "scripts": {
+    "build": "parcel build --target=node --bundle-node-modules --no-source-maps ./src/*",
     "local": "node run-local.js"
   },
   "dependencies": {
     "@actions/core": "^1.7.0",
     "mime": "^3.0.0",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "parcel-plugin-static-files-copy": "^2.6.0"
+  },
+  "staticFiles": {
+    "staticPath": [
+        {
+            "staticOutDir": "images",
+            "staticPath": "src/images"
+        },
+        {
+            "staticOutDir": "templates",
+            "staticPath": "src/templates"
+        }
+    ]
   }
 }

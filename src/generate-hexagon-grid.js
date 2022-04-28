@@ -8,7 +8,8 @@ const {
   exec,
   insert_grid,
   load_settings,
-  load_image
+  load_image,
+  commit_files
 } = require('./utils');
 
 const GITHUB_TOKEN = core.getInput('gh_token');

@@ -1,0 +1,4 @@
+{{ #effects }}
+{{{ . }}}
+{{ /effects }}
+<image href="{{{ image_source }}}"  style="--x: {{ nth }}; --filter:{{ #effect_names }} url(#{{ . }}{{ nth }}){{ /effect_names }};" height="50" width="50"/>

@@ -32,4 +32,4 @@ inputs:
     required: false
 runs:
   using: node12
-  main: src/generate-hexagon-grid.js
+  main: dist/generate-hexagon-grid.js

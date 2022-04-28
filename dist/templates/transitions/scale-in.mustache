@@ -1,0 +1,27 @@
+<style>
+    image {
+        transform: scale(0);
+        transform-origin: center;
+        transform-box: fill-box;
+        animation-name: scale-up;
+        animation-duration: 200ms;
+        animation-delay: calc(var(--x) * 50ms);
+        animation-fill-mode: forwards;
+    }
+    @keyframes scale-up {
+        0% {
+            transform: scale(0);
+            opacity: 0%;
+        }
+        10% {
+            opacity: 100%;
+        }
+        98% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 100%;
+        }
+    }
+</style>
