@@ -1,1 +1,1 @@
-# github-profile-hexagon-grid
+# Hexagon Grid

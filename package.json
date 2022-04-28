@@ -1,0 +1,17 @@
+{
+  "name": "github-profile-hexagon-grid",
+  "version": "0.0.1",
+  "description": "Generate a hexagon grid svg and populate in a readme file",
+  "main": "generate-hexagon-grid.js",
+  "repository": "https://github.com/MessyComposer/github-profile-hexagon-grid.git",
+  "author": "MesssyComposer (https://www.github.com/MessyComposer)",
+  "license": "GPL-3.0",
+  "scripts": {
+    "local": "node run-local.js"
+  },
+  "dependencies": {
+    "@actions/core": "^1.7.0",
+    "mime": "^3.0.0",
+    "mustache": "^4.2.0"
+  }
+}

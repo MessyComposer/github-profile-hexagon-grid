@@ -1,0 +1,35 @@
+name: 'Generate Hexagon Grid'
+author: 'MessyComposer (https://github.com/MessyComposer)'
+
+inputs:
+  gh_token:
+    description: 'GitHub token w/ repo scope'
+    required: false
+    default: ${{ github.token }}
+  readme_path:
+    description: 'Path to your readme file'
+    default: './README.md'
+    required: false
+  as_base64:
+    description: 'If set to false, pushes svg to repo as well'
+    default: 'true'
+    required: false
+  grid_file_path:
+    description: 'Path where svg is committed to'
+    default: './grid.svg'
+    required: false
+  commit_message:
+    description: "Commit message used while committing the changes"
+    default: "Add Hexagon Grid to Readme"
+    required: false
+  git_username:
+    description: "Username used while committing the changes"
+    default: "hex-grid"
+    required: false
+  git_email:
+    description: "Email used for committing the changes"
+    default: "hex-grid@example.com"
+    required: false
+runs:
+  using: node12
+  main: src/generate-hexagon-grid.js
