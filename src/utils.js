@@ -3,9 +3,14 @@ const core = require("@actions/core");
 const fs = require("fs");
 var mime = require("mime");
 const path = require('path');
+const Mustache = require('mustache');
+const axios = require('axios').default;
 
 const GRID_FILE_PATH = core.getInput('grid_file_path');
 const AS_BASE64 = core.getInput('as_base64') == 'true';
+
+const hexagon_base_template = fs.readFileSync(path.join(__dirname,"templates/hexagon_base.mustache"), "utf8");
+
 
 // Executes a CLI command as a child process
 const exec = (cmd, args = [], options = {}) => new Promise((resolve, reject) => {
@@ -36,13 +41,14 @@ const exec = (cmd, args = [], options = {}) => new Promise((resolve, reject) => 
 const build_grid_readme = () => {
     let file_path = GRID_FILE_PATH;
     if(AS_BASE64){
-        file_path = base64_encode(GRID_FILE_PATH);
+        file_path = (
+            "data:" +
+            mime.getType(GRID_FILE_PATH) +
+            ";base64," +
+            fs.readFileSync(GRID_FILE_PATH, "base64")
+        );
     }
-    return `<a href="https://github.com/MessyComposer/github-profile-hexagon-grid">
-    <img src="${process.env.TEST_MODE ? './grid.svg' : file_path}"
-        height="200px"
-    />
-</a>`;
+    return `<a href="https://github.com/MessyComposer/github-profile-hexagon-grid"><img src="${process.env.TEST_MODE ? './grid.svg' : file_path}" height="200px"/></a>`;
 };
 
 const insert_grid = (readme) => {
@@ -122,24 +128,42 @@ const commit_files = async (githubToken, filePaths) => {
   core.info("repository upstream updated");
 };
 
-const base64_encode = (file) => {
-  return (
-    "data:" +
-    mime.getType(file) +
-    ";base64," +
-    fs.readFileSync(file, "base64")
-  );
-};
+const load_image = async (image) => {
+    if (typeof(image) == "object") {
+        const res = await axios.get(image.url, {
+            responseType: 'arraybuffer'
+        })
+        let image_base64 = (
+            "data:" + 
+            res.headers["content-type"] +
+            ";base64," +
+            Buffer.from(res.data, 'binary').toString('base64')
+        );
+        if(image.hex){
+            image_base64 = "data:image/svg+xml;base64,"+Buffer.from(Mustache.render(
+                hexagon_base_template,
+                {
+                    embed: image_base64,
+                    bg_fill: image.bg_fill || "rgba(215,255,212,0.5)"
+                }
+            )).toString('base64')
+        }
 
-const load_image = (name) => {
-    if (name.includes("http")) {
-        console.log("LOAD IMAGE FROM URL");
+        
+
+        return image_base64;
     }
-    else if (name.includes("base64")) {
-        return name;
+    else if (image.includes("base64")) {
+        return image;
     }
     else {
-        return base64_encode(path.join(__dirname, `images/${name.toLowerCase()}.svg`));
+        const file_path = path.join(__dirname, `images/${image.toLowerCase()}.svg`);
+        return (
+            "data:" +
+            mime.getType(file_path) +
+            ";base64," +
+            fs.readFileSync(file_path, "base64")
+        );
     }
 }
 
@@ -147,7 +171,6 @@ module.exports = {
   insert_grid,
   exec,
   commit_files,
-  base64_encode,
   load_settings,
   load_image,
 };

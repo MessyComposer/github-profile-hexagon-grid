@@ -29,15 +29,15 @@ const transition_templates = {
     "scale-in": fs.readFileSync(path.join(__dirname,"templates/transitions/scale-in.mustache"), "utf8"),
 };
 
-const generate_grid = (settings) => {
+const generate_grid = async (settings) => {
     // Render hexagon svg's
-    const hexagons = settings.images.map((image, i) => {
+    const hexagons = await Promise.all(settings.images.map(async (image, i) => {
         // Render effect templates
-        effects = settings.effects.map(effect => {
+        const effects = settings.effects.map(effect => {
             if(!effect_templates[effect]){
                 core.error("No effect called " + effect);
                 process.exit(1);
-            }    
+            }
             return Mustache.render(
                 effect_templates[effect],
                 {
@@ -48,17 +48,7 @@ const generate_grid = (settings) => {
             )
         });
 
-        // Render transition templates
-        transitions = settings.transitions.map(transition => {
-            if(!transition_templates[transition]){
-                core.error("No transition called " + transition);
-                process.exit(1);
-            }    
-            return Mustache.render(
-                transition_templates[transition]
-            )
-        });
-
+        let image_source = await load_image(image);
         // Render hexagon
         return Mustache.render(
             hexagon_template,
@@ -66,13 +56,25 @@ const generate_grid = (settings) => {
                 nth: i,
                 effect_names: settings.effects,
                 effects,
-                image_source: load_image(image),
+                image_source: image_source,
             }
         );
+    }));
+    
+    // Render transition templates
+    const transitions = settings.transitions.map(transition => {
+        if(!transition_templates[transition]){
+            core.error("No transition called " + transition);
+            process.exit(1);
+        }    
+        return Mustache.render(
+            transition_templates[transition]
+        )
     });
 
+    const width = (settings.images.length / 2) * 50 + 25;
     // Render Grid
-    const output = Mustache.render(grid_template, { hexagons, transitions });
+    const output = Mustache.render(grid_template, { hexagons, transitions, width });
     
     // Save grid svg file for later use
     fs.writeFileSync(GRID_FILE_PATH, output);
@@ -89,7 +91,7 @@ const generate_grid = (settings) => {
         
         core.info('Generating grid SVG');
         const settings = load_settings(readme);
-        generate_grid(settings);
+        await generate_grid(settings);
         
         const newReadme = insert_grid(readme);
         
