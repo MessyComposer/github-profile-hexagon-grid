@@ -2,12 +2,12 @@
   "name": "github-profile-hexagon-grid",
   "version": "0.0.1",
   "description": "Generate a hexagon grid svg and populate in a readme file",
-  "main": "generate-hexagon-grid.js",
+  "main": "index.js",
   "repository": "https://github.com/MessyComposer/github-profile-hexagon-grid.git",
   "author": "MesssyComposer (https://www.github.com/MessyComposer)",
   "license": "GPL-3.0",
   "scripts": {
-    "build": "parcel build --target=node --bundle-node-modules --no-source-maps ./src/*",
+    "build": "ncc build src/index.js --minify",
     "local": "node run-local.js"
   },
   "dependencies": {
@@ -16,19 +16,6 @@
     "mustache": "^4.2.0"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.5",
-    "parcel-plugin-static-files-copy": "^2.6.0"
-  },
-  "staticFiles": {
-    "staticPath": [
-        {
-            "staticOutDir": "images",
-            "staticPath": "src/images"
-        },
-        {
-            "staticOutDir": "templates",
-            "staticPath": "src/templates"
-        }
-    ]
+    "@vercel/ncc": "^0.33.4"
   }
 }

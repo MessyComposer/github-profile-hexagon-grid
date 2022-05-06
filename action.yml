@@ -11,8 +11,8 @@ inputs:
     default: './README.md'
     required: false
   as_base64:
-    description: 'If set to false, pushes svg to repo as well'
-    default: 'true'
+    description: 'If false, pushes svg to repo as well'
+    default: 'false'
     required: false
   grid_file_path:
     description: 'Path where svg is committed to'
@@ -32,4 +32,4 @@ inputs:
     required: false
 runs:
   using: node12
-  main: dist/generate-hexagon-grid.js
+  main: dist/index.js
