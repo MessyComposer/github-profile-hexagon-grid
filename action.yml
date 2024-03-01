@@ -31,5 +31,5 @@ inputs:
     default: "hex-grid@example.com"
     required: false
 runs:
-  using: node12
-  main: src/index.js
+  using: node20
+  main: dist/index.js
